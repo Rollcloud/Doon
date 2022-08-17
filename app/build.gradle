@@ -5,10 +5,9 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.todoapp"
+        applicationId "com.rollcloud.doon"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1

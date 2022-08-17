@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.rollcloud.doon
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
