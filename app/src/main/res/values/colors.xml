@@ -10,6 +10,8 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
 
+    <color name="litherGray">#a1a1a1</color>
+
     <array name="random_color">
         <item name="red_400" type="color">#e84e40</item>
         <item name="pink_400" type="color">#ec407a</item>

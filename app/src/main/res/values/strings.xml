@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Doon</string>
+    <!-- task -->
+    <string name="new_task">New Task</string>
+    <string name="enter_title">Task Title</string>
+    <string name="enter_description">What is to be done?</string>
+    <string name="enter_datetime">Set reminder date and time</string>
+    <!-- item -->
+    <string name="date_label">Date</string>
+    <string name="time_label">Time</string>
+    <string name="category_label">Category</string>
 </resources>
