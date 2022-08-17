@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val DB_NAME = "todo.db"
+const val DB_NAME = "doon.db"
 
 class TaskActivity : AppCompatActivity(), View.OnClickListener {
 
