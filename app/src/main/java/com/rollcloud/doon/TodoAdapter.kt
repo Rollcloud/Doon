@@ -31,16 +31,14 @@ class TodoAdapter(val list: List<TodoModel>) : RecyclerView.Adapter<TodoAdapter.
 
     class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(todoModel: TodoModel) {
+            """Sets values in UI."""
             with(itemView) {
                 val colors = resources.getIntArray(R.array.random_color)
                 val randomColor = colors[Random().nextInt(colors.size)]
                 viewColorTag.setBackgroundColor(randomColor)
                 txtShowTitle.text = todoModel.title
-                txtShowTask.text = todoModel.description
-                txtShowCategory.text = todoModel.category
                 updateTime(todoModel.time)
                 updateDate(todoModel.date)
-
             }
         }
         private fun updateTime(time: Long) {

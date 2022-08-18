@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:id="@+id/titleInpLay"
+        android:id="@+id/titleInputLayout"
         app:hintTextColor="@color/secondaryColor"
         app:boxStrokeColor="@color/secondaryColor"
         android:layout_marginEnd="16dp"
@@ -58,37 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="4dp"
-        android:text="@string/enter_description"
-        android:textColor="@color/secondaryDarkColor"
-        android:textSize="16sp" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:hintTextColor="@color/secondaryColor"
-        app:boxStrokeColor="@color/secondaryColor"
-        android:layout_marginEnd="16dp"
-        android:id="@+id/taskInpLay"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter your Task"
-            android:lines="3"
-            android:gravity="start"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/enter_datetime"
+        android:text="@string/enter_date"
         android:textColor="@color/secondaryDarkColor"
         android:textSize="16sp" />
 
@@ -116,59 +86,6 @@
             android:paddingEnd="8dp"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/timeInptLay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone"
-        app:boxStrokeColor="@color/secondaryColor"
-        app:hintTextColor="@color/secondaryColor">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/timeEdt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:cursorVisible="false"
-            android:drawableEnd="@drawable/ic_access_time_black_24dp"
-            android:drawablePadding="8dp"
-            android:drawableTint="@color/secondaryColor"
-            android:focusable="auto"
-            android:hint="Set Time"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp">
-
-        <Spinner
-            android:id="@+id/spinnerCategory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            android:minHeight="16pt" />
-
-        <ImageView
-            android:id="@+id/imgAddCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_playlist_add_black_24dp"
-            android:tint="@color/secondaryDarkColor" />
-    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveBtn"
