@@ -3,6 +3,7 @@ package com.rollcloud.doon
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,11 +17,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.System.currentTimeMillis
 
 class MainActivity : AppCompatActivity() {
 
-    val list = arrayListOf<TodoModel>()
-    var adapter = TodoAdapter(list)
+    private val actionsTasks = arrayListOf<TaskWithActions>()
+    var adapter = TaskAdapter(actionsTasks)
 
     val db by lazy {
         AppDatabase.getDatabase(this)
@@ -30,20 +32,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        todoRv.apply {
+        tasks_RV.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
         }
 
         initSwipe()
 
-        db.todoDao().getTask().observe(this, Observer {
+        db.actionDao().loadTasksAndActions().observe(this, Observer {
             if (!it.isNullOrEmpty()) {
-                list.clear()
-                list.addAll(it)
+                actionsTasks.clear()
+                actionsTasks.addAll(it)
                 adapter.notifyDataSetChanged()
             }else{
-                list.clear()
+                actionsTasks.clear()
                 adapter.notifyDataSetChanged()
             }
         })
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun initSwipe() {
+    private fun initSwipe() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -67,11 +69,14 @@ class MainActivity : AppCompatActivity() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        db.todoDao().deleteTask(adapter.getItemId(position))
+                        db.taskDao().deleteTask(db.taskDao().getTask(adapter.getItemId(position)))
                     }
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        db.todoDao().finishTask(adapter.getItemId(position))
+                        val taskId = adapter.getItemId(position)
+                        val performedAt = currentTimeMillis()
+                        val performedAction = Action(taskId, performedAt)
+                        db.actionDao().insertAction(performedAction)
                     }
                 }
             }
@@ -147,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(todoRv)
+        itemTouchHelper.attachToRecyclerView(tasks_RV)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -156,12 +161,12 @@ class MainActivity : AppCompatActivity() {
         val searchView = item.actionView as SearchView
         item.setOnActionExpandListener(object :MenuItem.OnActionExpandListener{
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                displayTodo()
+                displayTask()
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                displayTodo()
+                displayTask()
                 return true
             }
 
@@ -173,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if(!newText.isNullOrEmpty()){
-                    displayTodo(newText)
+                    displayTask(newText)
                 }
                 return true
             }
@@ -183,13 +188,13 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    fun displayTodo(newText: String = "") {
-        db.todoDao().getTask().observe(this, Observer {
+    fun displayTask(newText: String = "") {
+        db.actionDao().loadTasksAndActions().observe(this, Observer {
             if(it.isNotEmpty()){
-                list.clear()
-                list.addAll(
-                    it.filter { todo ->
-                        todo.title.contains(newText,true)
+                actionsTasks.clear()
+                actionsTasks.addAll(
+                    it.filter { actionsTask ->
+                        actionsTask.task.name.contains(newText,true)
                     }
                 )
                 adapter.notifyDataSetChanged()

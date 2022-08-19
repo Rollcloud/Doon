@@ -55,14 +55,16 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveTodo() {
         """Retrieves values from UI."""
         val title = titleInputLayout.editText?.text.toString()
+        val frequency = frequencyInputLayout.editText?.text.toString().toLong()
 
         GlobalScope.launch(Dispatchers.Main) {
             val id = withContext(Dispatchers.IO) {
-                return@withContext db.todoDao().insertTask(
-                    TodoModel(
+                return@withContext db.taskDao().insertTask(
+                    Task(
                         title,
-                        finalDate,
-                        finalTime
+                        finalDate + finalTime,
+                        frequency,
+                        1
                     )
                 )
             }

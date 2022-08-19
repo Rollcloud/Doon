@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">Doon</string>
+    <!-- menu -->
+    <string name="completed_tasks">History</string>
     <!-- task -->
     <string name="new_task">New Task</string>
-    <string name="enter_title">Task Title</string>
-    <string name="enter_date">Set Task date</string>
+    <string name="enter_title">Set Title</string>
+    <string name="enter_date">Set Start Date</string>
+    <string name="enter_frequency">Set Frequency</string>
+    <string name="save_task">Create Task</string>
     <!-- item -->
+    <string name="next_label">Next Due</string>
+    <string name="delta_label">Time Left</string>
     <string name="date_label">Date</string>
     <string name="time_label">Time</string>
 </resources>

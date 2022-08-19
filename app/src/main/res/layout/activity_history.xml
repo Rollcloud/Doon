@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.rollcloud.doon.HistoryActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/completed_RV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_task_completed" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
