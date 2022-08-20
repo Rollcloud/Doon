@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.rollcloud.doon"
-        minSdkVersion 23
+        minSdkVersion 27
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -39,9 +39,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
 
-
     //database
-    implementation "androidx.room:room-runtime:2.2.3"
-    implementation "androidx.room:room-ktx:2.2.3"
-    kapt "androidx.room:room-compiler:2.2.3"
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
 }

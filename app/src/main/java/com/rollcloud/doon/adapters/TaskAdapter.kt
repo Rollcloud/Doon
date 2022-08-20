@@ -34,8 +34,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     fun bind(actionsTask: TaskWithActions) {
       /* Sets values in UI. */
       with(itemView) {
-        var nextDue = 0L
-        nextDue =
+        val nextDue =
           if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
           else actionsTask.actions.last().timestamp + actionsTask.task.frequency
 
