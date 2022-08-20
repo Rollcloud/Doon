@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.rollcloud.doon.HistoryActivity" android:exported="false" />
-        <activity android:name="com.rollcloud.doon.TaskActivity" android:exported="false" />
-        <activity android:name="com.rollcloud.doon.MainActivity" android:exported="true">
+        <activity android:name="com.rollcloud.doon.activities.HistoryActivity" android:exported="false" />
+        <activity android:name="com.rollcloud.doon.activities.TaskActivity" android:exported="false" />
+        <activity android:name="com.rollcloud.doon.activities.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

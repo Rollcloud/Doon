@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.rollcloud.doon.TaskActivity">
+    tools:context="com.rollcloud.doon.activities.TaskActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -29,7 +29,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
-        android:text="@string/enter_title"
+        android:text="@string/enter_name"
         android:textColor="@color/secondaryDarkColor"
         android:textSize="16sp" />
 
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:id="@+id/titleInputLayout"
+        android:id="@+id/nameInputLayout"
         app:hintTextColor="@color/secondaryColor"
         app:boxStrokeColor="@color/secondaryColor"
         android:layout_marginEnd="16dp"
@@ -46,11 +46,12 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Task title"
-            android:paddingStart="8dp"
+            android:hint="@string/name_hint"
             android:inputType="textCapWords"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -80,8 +81,8 @@
             android:drawableEnd="@drawable/ic_date_range_black_24dp"
             android:drawablePadding="8dp"
             android:drawableTint="@color/secondaryDarkColor"
-            android:focusable="false"
-            android:hint="Set Date"
+            android:focusable="true"
+            android:hint="@string/date_hint"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textSize="18sp" />
@@ -113,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Enter task frequency (days)"
+            android:hint="@string/frequency_hint"
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 

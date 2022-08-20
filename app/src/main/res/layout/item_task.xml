@@ -33,7 +33,7 @@
 
 
             <TextView
-                android:id="@+id/txtShowTitle"
+                android:id="@+id/txtShowName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -44,14 +44,14 @@
                 android:textColor="#303030"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="Task Title" />
+                tools:text="Task Name" />
 
 
             <TextView
                 android:id="@+id/textDueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtShowTitle"
+                android:layout_below="@id/txtShowName"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
                 android:text="@string/next_label"
@@ -73,7 +73,7 @@
                 android:id="@+id/textDueDelta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtShowTitle"
+                android:layout_below="@id/txtShowName"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="10dp"
                 android:text="@string/delta_label"
@@ -92,10 +92,10 @@
                 tools:text="2 days" />
 
             <TextView
-                android:id="@+id/textFrequency"
+                android:id="@+id/txtShowFrequency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/txtShowTitle"
+                android:layout_alignBottom="@id/txtShowName"
                 android:layout_alignParentEnd="true"
                 android:textColor="@android:color/black"
                 tools:text="Every 5 days" />

@@ -32,7 +32,7 @@
 
 
             <TextView
-                android:id="@+id/txtShowTitle"
+                android:id="@+id/txtShowName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -50,7 +50,7 @@
                 android:id="@+id/textDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtShowTitle"
+                android:layout_below="@id/txtShowName"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
                 android:text="@string/date_label"
@@ -72,7 +72,7 @@
                 android:id="@+id/textTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtShowTitle"
+                android:layout_below="@id/txtShowName"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="10dp"
                 android:text="@string/time_label"
@@ -94,7 +94,7 @@
                 android:id="@+id/textSince"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/txtShowTitle"
+                android:layout_alignBottom="@id/txtShowName"
                 android:layout_alignParentEnd="true"
                 android:textColor="@android:color/black"
                 tools:text="+3 days" />
