@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.rollcloud.doon.Action
 import com.rollcloud.doon.MILLIS_PER_DAY
 import com.rollcloud.doon.R
 import com.rollcloud.doon.TaskWithActions
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.zipWithNext
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
@@ -46,6 +48,33 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
         updateColorTag(nextDue)
         updateDueDate(nextDue)
         updateDueDelta(nextDue)
+        updateScore(actionsTask.task.frequency, actionsTask.actions)
+      }
+    }
+
+    fun calculateScore(frequency: Long, timestampDeltas: List<Long>): Float {
+      /*
+       * A scoring algorithm for timeliness of task performance.
+       * Must provide an output in decimal days.
+       */
+      // Average interval of last 5 actions - frequency
+      if (timestampDeltas.isEmpty()) return 0F
+      val scoringDeltas: List<Long>
+      val n = 5
+      scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
+      val numberDeltas = scoringDeltas.size
+      val meanInterval = (scoringDeltas.last() - scoringDeltas.first()).toFloat() / numberDeltas
+      val score = meanInterval - frequency
+      return score / MILLIS_PER_DAY
+    }
+
+    private fun updateScore(frequency: Long, actions: List<Action>) {
+      val timestamps = actions.map { it.timestamp }
+      val deltas = timestamps.zipWithNext { a, b -> b - a }
+      val score = calculateScore(frequency, deltas)
+      itemView.txtShowScore.text = buildString {
+        append(String.format("%.1f", score))
+        append(" days")
       }
     }
 
