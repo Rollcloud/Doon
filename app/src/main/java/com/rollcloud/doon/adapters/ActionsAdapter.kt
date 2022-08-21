@@ -12,6 +12,7 @@ import java.util.*
 import kotlinx.android.synthetic.main.item_task_completed.view.*
 import kotlinx.android.synthetic.main.item_task_completed.view.txtShowName
 import kotlinx.android.synthetic.main.item_task_completed.view.viewColorTag
+import kotlin.math.absoluteValue
 
 class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
   RecyclerView.Adapter<ActionsAdapter.ActionsViewHolder>() {
@@ -45,7 +46,7 @@ class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
 
     private fun updateColorTag(task: Task) {
       val colors = itemView.resources.getIntArray(R.array.random_color)
-      val taskHash = "${task.id}${task.name}".hashCode()
+      val taskHash = "${task.id}${task.name}".hashCode().absoluteValue
       val randomColor = colors[taskHash % colors.size]
       itemView.viewColorTag.setBackgroundColor(randomColor)
     }
