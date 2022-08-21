@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import android.media.MediaPlayer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
   private val actionsTasks = arrayListOf<TaskWithActions>()
   var adapter = TaskAdapter(actionsTasks)
 
+  private var dingPlayer: MediaPlayer? = null
   val db by lazy { AppDatabase.getDatabase(this) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun initSwipe() {
+    dingPlayer = MediaPlayer.create(this@MainActivity, R.raw.ding)
+
     val simpleItemTouchCallback =
       object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(
@@ -82,6 +86,7 @@ class MainActivity : AppCompatActivity() {
               val performedAction = Action(taskId, performedAt)
               db.actionDao().insertAction(performedAction)
             }
+            dingPlayer?.start()
           }
         }
 
@@ -226,4 +231,10 @@ class MainActivity : AppCompatActivity() {
   fun openNewTask(view: View) {
     startActivity(Intent(this, TaskActivity::class.java))
   }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    dingPlayer?.release()
+  }
+
 }
