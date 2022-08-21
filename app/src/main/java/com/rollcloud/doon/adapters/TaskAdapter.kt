@@ -37,7 +37,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       /* Sets values in UI. */
       with(itemView) {
         val nextDue =
-          if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
+          if (actionsTask.actions.isEmpty()) actionsTask.task.startDate + actionsTask.task.frequency
           else actionsTask.actions.last().timestamp + actionsTask.task.frequency
 
         txtShowName.text = actionsTask.task.name
@@ -52,7 +52,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       }
     }
 
-    fun calculateScore(frequency: Long, timestampDeltas: List<Long>): Float {
+    private fun calculateScore(frequency: Long, timestampDeltas: List<Long>): Float {
       /*
        * A scoring algorithm for timeliness of task performance.
        * Must provide an output in decimal days.

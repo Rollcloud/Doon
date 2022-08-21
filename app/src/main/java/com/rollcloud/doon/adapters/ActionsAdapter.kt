@@ -9,10 +9,10 @@ import com.rollcloud.doon.R
 import com.rollcloud.doon.Task
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.item_task_completed.view.*
 import kotlinx.android.synthetic.main.item_task_completed.view.txtShowName
 import kotlinx.android.synthetic.main.item_task_completed.view.viewColorTag
-import kotlin.math.absoluteValue
 
 class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
   RecyclerView.Adapter<ActionsAdapter.ActionsViewHolder>() {
