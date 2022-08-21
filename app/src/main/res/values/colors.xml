@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- https://material.io/resources/color/#!/?primary.color=005EB8&secondary.color=5E35B1 -->
-    <color name="primaryColor">#005eb8</color>
-    <color name="primaryLightColor">#578beb</color>
-    <color name="primaryDarkColor">#003587</color>
-    <color name="secondaryColor">#5a00b8</color>
-    <color name="secondaryLightColor">#9040ec</color>
-    <color name="secondaryDarkColor">#190087</color>
-    <color name="primaryTextColor">#ffffff</color>
-    <color name="secondaryTextColor">#ffffff</color>
+    <color name="saltire_blue">#005eb8</color>
+    <color name="saltire_blue_light">#578beb</color>
+    <color name="saltire_blue_dark">#003587</color>
+    <color name="royal_purple">#5a00b8</color>
+    <color name="royal_purple_light">#9040ec</color>
+    <color name="royal_purple_dark">#190087</color>
+    <color name="text_white">#ffffff</color>
 
-    <color name="litherGray">#a1a1a1</color>
+    <color name="lither_gray">#a1a1a1</color>
+    <color name="dark_charcoal">#333333</color>
+    <color name="onyx_black">#212121</color>
 
     <array name="random_color">
         <item name="red_400" type="color">#e84e40</item>
