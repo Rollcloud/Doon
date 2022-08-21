@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="10dp"
-    android:elevation="10dp"
-    app:cardCornerRadius="10dp">
+    android:orientation="vertical"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
 
-    <View
-        android:id="@+id/viewColorTag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="5dp"
         android:background="@android:color/white"
-        android:paddingBottom="5dp">
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/viewColorTag"
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:background="@color/secondaryColor" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -115,7 +114,7 @@
                 tools:text="Every 5 days" />
 
         </RelativeLayout>
+    </LinearLayout>
 
-    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
