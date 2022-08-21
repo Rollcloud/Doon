@@ -28,5 +28,19 @@ interface ActionDao {
 
   @Query("Select * from `action`") fun getActions(): LiveData<List<ActionWithTask>>
 
-  @Query("SELECT * FROM Task") fun loadTasksAndActions(): LiveData<List<TaskWithActions>>
+  @Query(
+    "SELECT *, " +
+      "(SELECT " +
+      " CASE" +
+      "  WHEN MAX(timestamp) IS NULL" +
+      "  THEN Task.startDate + frequency" +
+      "  ELSE MAX(timestamp) + frequency" +
+      " END" +
+      " from `action`" +
+      " where task.id = `action`.task_id" +
+      ") as due " +
+      "FROM Task " +
+      "ORDER BY due ASC"
+  )
+  fun loadTasksAndActions(): LiveData<List<TaskWithActions>>
 }
