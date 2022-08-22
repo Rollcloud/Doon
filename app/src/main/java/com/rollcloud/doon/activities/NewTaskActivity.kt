@@ -24,17 +24,26 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
   lateinit var myCalendar: Calendar
   lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
-  var startDate = 0L
-
   val db by lazy { AppDatabase.getDatabase(this) }
+
+  private val myFormat = "EEE, d MMM yyyy"
+  private val sdf = SimpleDateFormat(myFormat)
+
+  private val now = System.currentTimeMillis()
+  private var startDate =  roundToLower(now , MILLIS_PER_DAY)
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     /* Creates UI. */
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_task_new)
 
+    setDefaults()
+
     dateEdt.setOnClickListener(this)
     saveBtn.setOnClickListener(this)
+
+    nameInputLayout.editText?.requestFocus()
   }
 
   override fun onClick(v: View) {
@@ -48,9 +57,13 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     }
   }
 
+  private fun setDefaults() {
+    dateEdt.setText(sdf.format(startDate))
+  }
+
   private fun saveTodo() {
     /* Retrieves values from UI. */
-    val title = nameInputLayout.editText?.text.toString()
+    val title = nameInputLayout.editText?.text.toString().trim()
     val frequency = frequencyInputLayout.editText?.text.toString().toLong() * MILLIS_PER_DAY
 
     GlobalScope.launch(Dispatchers.Main) {
@@ -89,8 +102,6 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
 
   private fun updateDate() {
     // Mon, 5 Jan 2020
-    val myFormat = "EEE, d MMM yyyy"
-    val sdf = SimpleDateFormat(myFormat)
     startDate = roundToLower(myCalendar.time.time, MILLIS_PER_DAY)
     dateEdt.setText(sdf.format(startDate))
   }
