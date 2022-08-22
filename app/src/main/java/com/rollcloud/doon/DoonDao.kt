@@ -33,7 +33,7 @@ interface ActionDao {
       "(SELECT " +
       " CASE" +
       "  WHEN MAX(timestamp) IS NULL" +
-      "  THEN Task.startDate + frequency" +
+      "  THEN Task.startDate" +
       "  ELSE MAX(timestamp) + frequency" +
       " END" +
       " from `action`" +

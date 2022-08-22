@@ -37,7 +37,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       /* Sets values in UI. */
       with(itemView) {
         val nextDue =
-          if (actionsTask.actions.isEmpty()) actionsTask.task.startDate + actionsTask.task.frequency
+          if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
           else actionsTask.actions.last().timestamp + actionsTask.task.frequency
 
         txtShowName.text = actionsTask.task.name
