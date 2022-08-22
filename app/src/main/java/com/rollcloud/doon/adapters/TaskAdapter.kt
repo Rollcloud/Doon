@@ -11,6 +11,7 @@ import com.rollcloud.doon.TaskWithActions
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.zipWithNext
+import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
@@ -72,6 +73,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val timestamps = actions.map { it.timestamp }
       val deltas = timestamps.zipWithNext { a, b -> b - a }
       val score = calculateScore(frequency, deltas)
+      if (score == 0F) return // don't show score if 0
       itemView.txtShowScore.text = buildString {
         append(String.format("%.1f", score))
         append(" days")
@@ -108,10 +110,17 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       // 2 days
       val now = System.currentTimeMillis()
       val delta = nextDue - now
-      itemView.txtShowDelta.text = buildString {
-        append((delta / MILLIS_PER_DAY))
-        append(" days")
-      }
+      val deltaDays = (delta / MILLIS_PER_DAY)
+      if (delta >= 0)
+        itemView.txtShowDelta.text = buildString {
+          append(deltaDays)
+          append(" days")
+        }
+      else
+        itemView.txtShowDelta.text = buildString {
+          append(deltaDays.absoluteValue)
+          append(" days ago")
+        }
     }
   }
 }
