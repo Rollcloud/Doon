@@ -13,6 +13,7 @@ import java.util.*
 import kotlin.collections.zipWithNext
 import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.item_task.view.*
+import java.lang.Long.max
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -37,19 +38,21 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     fun bind(actionsTask: TaskWithActions) {
       /* Sets values in UI. */
       with(itemView) {
+        var frequency = actionsTask.task.frequency
         val nextDue =
           if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
-          else actionsTask.actions.last().timestamp + actionsTask.task.frequency
+          else actionsTask.actions.last().timestamp + frequency
+        val queuedThreshold = frequency / 3
 
         txtShowName.text = actionsTask.task.name
         txtShowFrequency.text = buildString {
-          append((actionsTask.task.frequency / MILLIS_PER_DAY))
+          append((frequency / MILLIS_PER_DAY))
           append(" days")
         }
-        updateColorTag(nextDue)
+        updateColorTag(nextDue, queuedThreshold)
         updateDueDate(nextDue)
         updateDueDelta(nextDue)
-        updateScore(actionsTask.task.frequency, actionsTask.actions)
+        updateScore(frequency, actionsTask.actions)
       }
     }
 
@@ -80,7 +83,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       }
     }
 
-    private fun updateColorTag(nextDue: Long) {
+    private fun updateColorTag(nextDue: Long, queuedThreshold: Long) {
       val colors = itemView.resources.getIntArray(R.array.random_color)
       val colorQueued = colors[9]
       val colorDue = colors[13]
@@ -89,7 +92,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val now = System.currentTimeMillis()
 
       var taskColor = colorQueued
-      if (nextDue - now < MILLIS_PER_DAY * 2) {
+      if (nextDue - now < queuedThreshold) {
         taskColor = colorDue
       }
       if (nextDue - now < -MILLIS_PER_DAY) {
