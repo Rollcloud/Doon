@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Doon</string>
+    <string name="app_name">DoonIt</string>
     <!-- menu -->
     <string name="completed_tasks">History</string>
     <!-- new task -->
