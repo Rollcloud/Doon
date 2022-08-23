@@ -5,18 +5,39 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rollcloud.doon.Action
-import com.rollcloud.doon.MILLIS_PER_DAY
 import com.rollcloud.doon.R
 import com.rollcloud.doon.TaskWithActions
-import java.text.SimpleDateFormat
+import java.time.format.TextStyle
 import java.util.*
 import kotlin.collections.zipWithNext
-import kotlin.math.absoluteValue
-import kotlin.math.floor
+import kotlin.time.Duration
+import kotlin.time.DurationUnit.DAYS
+import kotlin.time.DurationUnit.MILLISECONDS
+import kotlin.time.toDuration
 import kotlinx.android.synthetic.main.item_task.view.*
+import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+
+  companion object {
+    fun calculateScore(frequency: Duration, timestampDeltas: List<Long>): Float {
+      /*
+       * A scoring algorithm for timeliness of task performance.
+       * Must provide an output in decimal days.
+       */
+      // Average interval of last 5 actions - frequency
+      if (timestampDeltas.isEmpty()) return 0F
+      val scoringDeltas: List<Long>
+      val n = 5
+      scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
+      val numberDeltas = scoringDeltas.size
+      val meanInterval: Duration = scoringDeltas.sum().toDuration(MILLISECONDS) / numberDeltas
+      val score = meanInterval - frequency
+      return score.inWholeHours / 24F
+    }
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
     return TaskViewHolder(
@@ -35,20 +56,24 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
   }
 
   class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    private val localTimeZone = TimeZone.currentSystemDefault()
+    private val locale: Locale = Locale.getDefault()
+
     fun bind(actionsTask: TaskWithActions) {
       /* Sets values in UI. */
       with(itemView) {
-        val frequency: Long = actionsTask.task.frequency
-        val nextDue =
-          if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
-          else actionsTask.actions.last().timestamp + frequency
-        val queuedThreshold = frequency / 3
+        val frequency: Duration = actionsTask.task.frequency.toDuration(MILLISECONDS)
+        val nextDue: Instant =
+          Instant.fromEpochMilliseconds(
+            if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
+            else actionsTask.actions.last().timestamp + actionsTask.task.frequency
+          )
+        val queuedThreshold: Duration = (frequency / 3)
 
         txtShowName.text = actionsTask.task.name
-        txtShowFrequency.text = buildString {
-          append((frequency / MILLIS_PER_DAY))
-          append(" days")
-        }
+        txtShowFrequency.text = "${frequency.inWholeDays} days"
+
         updateColorTag(nextDue, queuedThreshold)
         updateDueDate(nextDue)
         updateDueDelta(nextDue)
@@ -56,79 +81,56 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       }
     }
 
-    private fun calculateScore(frequency: Long, timestampDeltas: List<Long>): Float {
-      /*
-       * A scoring algorithm for timeliness of task performance.
-       * Must provide an output in decimal days.
-       */
-      // Average interval of last 5 actions - frequency
-      if (timestampDeltas.isEmpty()) return 0F
-      val scoringDeltas: List<Long>
-      val n = 5
-      scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
-      val numberDeltas = scoringDeltas.size
-      val meanInterval = (scoringDeltas.last() - scoringDeltas.first()).toFloat() / numberDeltas
-      val score = meanInterval - frequency
-      return score / MILLIS_PER_DAY
-    }
-
-    private fun updateScore(frequency: Long, actions: List<Action>) {
+    private fun updateScore(frequency: Duration, actions: List<Action>) {
       val timestamps = actions.map { it.timestamp }
       val deltas = timestamps.zipWithNext { a, b -> b - a }
       val score = calculateScore(frequency, deltas)
       if (score == 0F) return // don't show score if 0
-      itemView.txtShowScore.text = buildString {
-        append(String.format("%.1f", score))
-        append(" days")
-      }
+      itemView.txtShowScore.text = "${String.format("%.1f", score)} days"
     }
 
-    private fun updateColorTag(nextDue: Long, queuedThreshold: Long) {
+    private fun updateColorTag(nextDue: Instant, queuedThreshold: Duration) {
       val colors = itemView.resources.getIntArray(R.array.random_color)
       val colorQueued = colors[9]
       val colorDue = colors[13]
       val colorOverdue = colors[0]
 
-      val now = System.currentTimeMillis()
+      val clock: Clock = Clock.System
+      val now: Instant = clock.now()
+      val timeUntil: Duration = nextDue - now
 
-      var taskColor = colorQueued
-      if (nextDue - now < queuedThreshold) {
-        taskColor = colorDue
-      }
-      if (nextDue - now < -MILLIS_PER_DAY) {
-        taskColor = colorOverdue
-      }
+      val taskColor: Int =
+        when {
+          timeUntil < (-1).toDuration(DAYS) -> colorOverdue
+          timeUntil < queuedThreshold -> colorDue
+          else -> colorQueued
+        }
 
       itemView.viewColorTag.setBackgroundColor(taskColor)
     }
 
-    private fun updateDueDate(nextDue: Long) {
-      // Mon, 5 Jan 2020
-      val myFormat = "EEE, d MMM yyyy"
-      val sdf = SimpleDateFormat(myFormat)
-      itemView.txtShowDue.text = sdf.format(Date(nextDue))
+    private fun updateDueDate(nextDue: Instant) {
+      val d: LocalDateTime = nextDue.toLocalDateTime(localTimeZone)
+      val dow: String = d.dayOfWeek.getDisplayName(TextStyle.SHORT, locale)
+      val month: String = d.month.getDisplayName(TextStyle.SHORT, locale)
+      val nextDueFormatted = "$dow, ${d.dayOfMonth} $month ${d.year}"
+      itemView.txtShowDue.text = nextDueFormatted
     }
 
-    private fun updateDueDelta(nextDue: Long) {
-      // 2 days
-      val now = System.currentTimeMillis()
-      val delta = nextDue - now
-      val deltaDays = floor((delta / MILLIS_PER_DAY).toFloat()).toInt()
+    private fun updateDueDelta(nextDue: Instant) {
+      val dueDate: LocalDate = nextDue.toLocalDateTime(localTimeZone).date
+      val clock: Clock = Clock.System
+      val today: LocalDate = clock.todayIn(localTimeZone)
+      val daysUntil: Int = (dueDate - today).days
+
       when {
-        deltaDays > 1 -> itemView.txtShowDelta.text = buildString {
-            append("In ")
-            append(deltaDays)
-            append(" days")
-          }
-        deltaDays == 1 ->
+        daysUntil > 1 -> itemView.txtShowDelta.text = "In $daysUntil days"
+        daysUntil == 1 ->
           itemView.txtShowDelta.text = itemView.context.getString(R.string.one_day_ahead)
-        deltaDays == 0 -> itemView.txtShowDelta.text = itemView.context.getString(R.string.today)
-        deltaDays == -1 ->
+        daysUntil == 0 -> itemView.txtShowDelta.text = itemView.context.getString(R.string.today)
+        daysUntil == -1 ->
           itemView.txtShowDelta.text = itemView.context.getString(R.string.one_day_behind)
-        else -> itemView.txtShowDelta.text = buildString {
-            append(deltaDays.absoluteValue)
-            append(" days ago")
-          }
+        else -> itemView.txtShowDelta.text = "${-daysUntil} days ago"
       }
     }
   }

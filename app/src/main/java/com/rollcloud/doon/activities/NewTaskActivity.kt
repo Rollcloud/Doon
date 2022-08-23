@@ -6,11 +6,13 @@ import android.view.View
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.rollcloud.doon.AppDatabase
-import com.rollcloud.doon.MILLIS_PER_DAY
 import com.rollcloud.doon.R
 import com.rollcloud.doon.Task
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.DurationUnit.DAYS
+import kotlin.time.DurationUnit.MILLISECONDS
+import kotlin.time.toDuration
 import kotlinx.android.synthetic.main.activity_task_new.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,8 +32,7 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
   private val sdf = SimpleDateFormat(myFormat)
 
   private val now = System.currentTimeMillis()
-  private var startDate =  roundToLower(now , MILLIS_PER_DAY)
-
+  private var startDate: Long = now
 
   override fun onCreate(savedInstanceState: Bundle?) {
     /* Creates UI. */
@@ -58,13 +59,14 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
   }
 
   private fun setDefaults() {
-    dateEdt.setText(sdf.format(startDate))
+    dateEdt.setText(sdf.format(now))
   }
 
   private fun saveTodo() {
     /* Retrieves values from UI. */
     val title = nameInputLayout.editText?.text.toString().trim()
-    val frequency = frequencyInputLayout.editText?.text.toString().toLong() * MILLIS_PER_DAY
+    val frequencyDays = frequencyInputLayout.editText?.text.toString().toInt()
+    val frequency: Long = frequencyDays.toDuration(DAYS).toLong(MILLISECONDS)
 
     GlobalScope.launch(Dispatchers.Main) {
       withContext(Dispatchers.IO) {
@@ -96,13 +98,9 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     datePickerDialog.show()
   }
 
-  private fun roundToLower(value: Long, step: Long): Long {
-    return Math.floorDiv(value, step) * step
-  }
-
   private fun updateDate() {
     // Mon, 5 Jan 2020
-    startDate = roundToLower(myCalendar.time.time, MILLIS_PER_DAY)
+    startDate = myCalendar.time.time
     dateEdt.setText(sdf.format(startDate))
   }
 }

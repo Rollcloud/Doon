@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rollcloud.doon.ActionWithTask
 import com.rollcloud.doon.R
 import com.rollcloud.doon.Task
-import java.text.SimpleDateFormat
+import java.time.format.TextStyle
 import java.util.*
 import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.item_action.view.*
 import kotlinx.android.synthetic.main.item_action.view.txtShowName
 import kotlinx.android.synthetic.main.item_action.view.viewColorTag
+import kotlinx.android.synthetic.main.item_task.view.*
+import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
 
 class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
   RecyclerView.Adapter<ActionsAdapter.ActionsViewHolder>() {
@@ -34,13 +37,18 @@ class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
   }
 
   class ActionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    private val localTimeZone = TimeZone.currentSystemDefault()
+    private val locale: Locale = Locale.getDefault()
+
     fun bind(taskAction: ActionWithTask) {
       /* Sets values in UI. */
       with(itemView) {
+        var timestamp: Instant = Instant.fromEpochMilliseconds(taskAction.action.timestamp)
         txtShowName.text = taskAction.task.name
         updateColorTag(taskAction.task)
-        updateTime(taskAction.action.timestamp)
-        updateDate(taskAction.action.timestamp)
+        updateTime(timestamp)
+        updateDate(timestamp)
       }
     }
 
@@ -51,18 +59,18 @@ class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
       itemView.viewColorTag.setBackgroundColor(randomColor)
     }
 
-    private fun updateTime(time: Long) {
-      // Mon, 5 Jan 2020
-      val myFormat = "hh:mm:ss"
-      val sdf = SimpleDateFormat(myFormat)
-      itemView.txtShowTime.text = sdf.format(Date(time))
+    private fun updateTime(timestamp: Instant) {
+      val t: LocalTime = timestamp.toLocalDateTime(localTimeZone).time
+      val timeFormatted = t.toString()
+      itemView.txtShowTime.text = timeFormatted
     }
 
-    private fun updateDate(time: Long) {
-      // Mon, 5 Jan 2020
-      val myFormat = "EEE, d MMM yyyy"
-      val sdf = SimpleDateFormat(myFormat)
-      itemView.txtShowDate.text = sdf.format(Date(time))
+    private fun updateDate(timestamp: Instant) {
+      val d: LocalDate = timestamp.toLocalDateTime(localTimeZone).date
+      val dow: String = d.dayOfWeek.getDisplayName(TextStyle.SHORT, locale)
+      val month: String = d.month.getDisplayName(TextStyle.SHORT, locale)
+      val nextDueFormatted = "$dow, ${d.dayOfMonth} $month ${d.year}"
+      itemView.txtShowDate.text = nextDueFormatted
     }
   }
 }
