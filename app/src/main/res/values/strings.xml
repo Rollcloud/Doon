@@ -13,9 +13,12 @@
     <string name="save_task">Create Task</string>
     <!-- item -->
     <string name="next_label">Next Due</string>
-    <string name="delta_label">Due In</string>
+    <string name="delta_label">Due</string>
     <string name="date_label">Date</string>
     <string name="time_label">Time</string>
+    <string name="one_day_ahead">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="one_day_behind">Yesterday</string>
     <!-- item completed -->
     <string name="completed_date_label">Performed</string>
 </resources>

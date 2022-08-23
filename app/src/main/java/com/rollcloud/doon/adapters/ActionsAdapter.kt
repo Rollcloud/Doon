@@ -53,14 +53,14 @@ class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
 
     private fun updateTime(time: Long) {
       // Mon, 5 Jan 2020
-      val myFormat = "h:mm a"
+      val myFormat = "hh:mm:ss"
       val sdf = SimpleDateFormat(myFormat)
       itemView.txtShowTime.text = sdf.format(Date(time))
     }
 
     private fun updateDate(time: Long) {
       // Mon, 5 Jan 2020
-      val myFormat = "EEE, d MMM yyyy, h:mm:ss a"
+      val myFormat = "EEE, d MMM yyyy"
       val sdf = SimpleDateFormat(myFormat)
       itemView.txtShowDate.text = sdf.format(Date(time))
     }

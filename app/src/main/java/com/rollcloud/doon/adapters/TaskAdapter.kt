@@ -12,8 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.zipWithNext
 import kotlin.math.absoluteValue
+import kotlin.math.floor
 import kotlinx.android.synthetic.main.item_task.view.*
-import java.lang.Long.max
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -38,7 +38,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     fun bind(actionsTask: TaskWithActions) {
       /* Sets values in UI. */
       with(itemView) {
-        var frequency = actionsTask.task.frequency
+        val frequency: Long = actionsTask.task.frequency
         val nextDue =
           if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
           else actionsTask.actions.last().timestamp + frequency
@@ -113,17 +113,23 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       // 2 days
       val now = System.currentTimeMillis()
       val delta = nextDue - now
-      val deltaDays = (delta / MILLIS_PER_DAY)
-      if (delta >= 0)
-        itemView.txtShowDelta.text = buildString {
-          append(deltaDays)
-          append(" days")
-        }
-      else
-        itemView.txtShowDelta.text = buildString {
-          append(deltaDays.absoluteValue)
-          append(" days ago")
-        }
+      val deltaDays = floor((delta / MILLIS_PER_DAY).toFloat()).toInt()
+      when {
+        deltaDays > 1 -> itemView.txtShowDelta.text = buildString {
+            append("In ")
+            append(deltaDays)
+            append(" days")
+          }
+        deltaDays == 1 ->
+          itemView.txtShowDelta.text = itemView.context.getString(R.string.one_day_ahead)
+        deltaDays == 0 -> itemView.txtShowDelta.text = itemView.context.getString(R.string.today)
+        deltaDays == -1 ->
+          itemView.txtShowDelta.text = itemView.context.getString(R.string.one_day_behind)
+        else -> itemView.txtShowDelta.text = buildString {
+            append(deltaDays.absoluteValue)
+            append(" days ago")
+          }
+      }
     }
   }
 }

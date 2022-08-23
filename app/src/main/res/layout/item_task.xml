@@ -101,7 +101,7 @@
                 android:layout_alignParentEnd="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:visibility="visible"
-                tools:text="2 days" />
+                tools:text="In 2 days" />
 
             <TextView
                 android:id="@+id/txtShowFrequency"
