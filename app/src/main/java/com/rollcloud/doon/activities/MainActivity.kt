@@ -80,13 +80,13 @@ class MainActivity : AppCompatActivity() {
               db.taskDao().deleteTask(db.taskDao().getTask(adapter.getItemId(position)))
             }
           } else if (direction == ItemTouchHelper.RIGHT) {
+            dingPlayer?.start()
             GlobalScope.launch(Dispatchers.IO) {
               val taskId = adapter.getItemId(position)
               val performedAt = currentTimeMillis()
               val performedAction = Action(taskId, performedAt)
               db.actionDao().insertAction(performedAction)
             }
-            dingPlayer?.start()
           }
         }
 
