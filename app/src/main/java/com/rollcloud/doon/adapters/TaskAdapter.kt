@@ -22,13 +22,14 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
   companion object {
-    fun calculateScore(frequency: Duration, timestampDeltas: List<Long>): Float {
+    fun calculateScore(frequency: Duration, timestampDeltas: List<Long>): Float? {
       /*
        * A scoring algorithm for timeliness of task performance.
        * Must provide an output in decimal days.
        */
       // Average interval of last 5 actions - frequency
-      if (timestampDeltas.isEmpty()) return 0F
+      if (timestampDeltas.isEmpty())
+        return null
       val scoringDeltas: List<Long>
       val n = 5
       scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
@@ -85,7 +86,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val timestamps = actions.map { it.timestamp }
       val deltas = timestamps.zipWithNext { a, b -> b - a }
       val score = calculateScore(frequency, deltas)
-      if (score == 0F) return // don't show score if 0
+      if (score == null) return // don't show score if null
       itemView.txtShowScore.text = "${String.format("%.1f", score)} days"
     }
 
