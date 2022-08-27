@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.Saltire.Light" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Saltire.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Color palette (via app-compat) -->
         <item name="colorPrimary">@color/saltire_blue</item>
         <item name="colorPrimaryVariant">@color/saltire_blue_dark</item>
