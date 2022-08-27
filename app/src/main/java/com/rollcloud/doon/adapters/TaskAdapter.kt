@@ -28,8 +28,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
        * Must provide an output in decimal days.
        */
       // Average interval of last 5 actions - frequency
-      if (timestampDeltas.isEmpty())
-        return null
+      if (timestampDeltas.isEmpty()) return null
       val scoringDeltas: List<Long>
       val n = 5
       scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
@@ -87,7 +86,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val deltas = timestamps.zipWithNext { a, b -> b - a }
       val score = calculateScore(frequency, deltas)
       if (score == null) return // don't show score if null
-      itemView.txtShowScore.text = "${String.format("%.1f", score)} days"
+      itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 
     private fun updateColorTag(nextDue: Instant, queuedThreshold: Duration) {
