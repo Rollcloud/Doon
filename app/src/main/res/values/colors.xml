@@ -13,7 +13,10 @@
     <color name="dark_charcoal">#333333</color>
     <color name="onyx_black">#212121</color>
 
-    <array name="random_color">
+    <color name="completion_green">#388E3C</color>
+    <color name="deletion_red">#D32F2F</color>
+
+    <array name="colors_400">
         <item name="red_400" type="color">#e84e40</item>
         <item name="pink_400" type="color">#ec407a</item>
         <item name="purple_400" type="color">#ab47bc</item>

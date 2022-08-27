@@ -90,7 +90,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     }
 
     private fun updateColorTag(nextDue: Instant, queuedThreshold: Duration) {
-      val colors = itemView.resources.getIntArray(R.array.random_color)
+      val colors = itemView.resources.getIntArray(R.array.colors_400)
       val colorQueued = colors[9]
       val colorDue = colors[13]
       val colorOverdue = colors[0]

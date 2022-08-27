@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
               icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_check_white_png)
 
-              paint.color = Color.parseColor("#388E3C")
+              paint.color = resources.getColor(R.color.completion_green, null)
 
               canvas.drawRect(
                 itemView.left.toFloat(),
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
             } else {
               icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_delete_white_png)
 
-              paint.color = Color.parseColor("#D32F2F")
+              paint.color = resources.getColor(R.color.deletion_red, null)
 
               canvas.drawRect(
                 itemView.right.toFloat() + dX,

@@ -13,7 +13,6 @@ import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.item_action.view.*
 import kotlinx.android.synthetic.main.item_action.view.txtShowName
 import kotlinx.android.synthetic.main.item_action.view.viewColorTag
-import kotlinx.android.synthetic.main.item_task.view.*
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 
@@ -53,7 +52,7 @@ class ActionsAdapter(private val taskActions: List<ActionWithTask>) :
     }
 
     private fun updateColorTag(task: Task) {
-      val colors = itemView.resources.getIntArray(R.array.random_color)
+      val colors = itemView.resources.getIntArray(R.array.colors_400)
       val taskHash = "${task.id}${task.name}".hashCode().absoluteValue
       val randomColor = colors[taskHash % colors.size]
       itemView.viewColorTag.setBackgroundColor(randomColor)
