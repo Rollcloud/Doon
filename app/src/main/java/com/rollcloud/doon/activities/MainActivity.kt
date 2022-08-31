@@ -208,7 +208,11 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun openNewTask(view: View) {
-    startActivity(Intent(this, TaskActivity::class.java))
+    startActivity(Intent(this, NewTaskActivity::class.java))
+  }
+
+  fun openEditTask(view: View, taskId: Long) {
+    startActivity(Intent(this, NewTaskActivity::class.java).putExtra("TaskId", taskId))
   }
 
   override fun onDestroy() {

@@ -13,7 +13,7 @@
             android:name="com.rollcloud.doon.activities.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name="com.rollcloud.doon.activities.TaskActivity"
+            android:name="com.rollcloud.doon.activities.NewTaskActivity"
             android:exported="false" />
         <activity
             android:name="com.rollcloud.doon.activities.MainActivity"

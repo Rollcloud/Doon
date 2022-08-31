@@ -10,7 +10,10 @@
     <string name="date_hint">Set initial date</string>
     <string name="enter_frequency">Set Frequency</string>
     <string name="frequency_hint">Enter frequency in days</string>
-    <string name="save_task">Create Task</string>
+    <string name="save_new_task">Create Task</string>
+    <!-- edit task -->
+    <string name="edit_task">Edit Task</string>
+    <string name="save_edit_task">Save Task</string>
     <!-- item -->
     <string name="next_label">Next Due</string>
     <string name="delta_label">Due</string>

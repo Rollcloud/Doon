@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.rollcloud.doon.activities.DB_NAME
+
+const val DB_NAME = "doon.db"
 
 @Database(entities = [Task::class, Action::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

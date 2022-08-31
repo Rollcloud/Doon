@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.rollcloud.doon.AppDatabase
+import com.rollcloud.doon.Constants
 import com.rollcloud.doon.R
 import com.rollcloud.doon.Task
 import java.text.SimpleDateFormat
@@ -19,32 +20,31 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-const val DB_NAME = "doon.db"
-
-class TaskActivity : AppCompatActivity(), View.OnClickListener {
+class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
   lateinit var myCalendar: Calendar
   lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
-  val db by lazy { AppDatabase.getDatabase(this) }
+  private val db by lazy { AppDatabase.getDatabase(this) }
 
-  private val myFormat = "EEE, d MMM yyyy"
-  private val sdf = SimpleDateFormat(myFormat)
+  private val sdf = SimpleDateFormat(Constants.dateFormat)
 
   private val now = System.currentTimeMillis()
   private var startDate: Long = now
+
+  private val bundle = intent.extras
+  private val taskId = bundle?.getLong("TaskId")
+  private val isNew = taskId == null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     /* Creates UI. */
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_task_new)
 
-    setDefaults()
-
     dateEdt.setOnClickListener(this)
     saveBtn.setOnClickListener(this)
 
-    nameInputLayout.editText?.requestFocus()
+    setDefaults()
   }
 
   override fun onClick(v: View) {
@@ -59,7 +59,28 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
   }
 
   private fun setDefaults() {
-    dateEdt.setText(sdf.format(now))
+    if (isNew) {
+      toolbarAddTask.title = R.string.new_task.toString()
+      saveBtn.text = R.string.save_new_task.toString()
+      dateEdt.setText(sdf.format(now))
+      nameInputLayout.editText?.requestFocus()
+    } else {
+      toolbarAddTask.title = R.string.edit_task.toString()
+      saveBtn.text = R.string.save_edit_task.toString()
+
+      GlobalScope.launch(Dispatchers.Main) {
+        val task = withContext(Dispatchers.IO) {
+          return@withContext db.taskDao().getTask(taskId!!)
+        }
+
+        nameInputLayout.editText?.setText(task.name)
+        dateEdt.isEnabled = false
+        dateEdt.setText(sdf.format(task.startDate))
+        frequencyInputLayout.editText?.setText(task.frequency.toDuration(MILLISECONDS).inWholeDays.toString())
+
+        finish()
+      }
+    }
   }
 
   private fun saveTodo() {
