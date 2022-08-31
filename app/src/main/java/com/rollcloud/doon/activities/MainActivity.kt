@@ -2,15 +2,15 @@ package com.rollcloud.doon.activities
 
 import android.content.Intent
 import android.graphics.*
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.Observer
-import android.media.MediaPlayer
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     dingPlayer = MediaPlayer.create(this@MainActivity, R.raw.ding)
 
     val simpleItemTouchCallback =
-      object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+      object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
         override fun onMove(
           recyclerView: RecyclerView,
           viewHolder: RecyclerView.ViewHolder,
@@ -78,11 +78,7 @@ class MainActivity : AppCompatActivity() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
           val position = viewHolder.adapterPosition
 
-          if (direction == ItemTouchHelper.LEFT) {
-            GlobalScope.launch(Dispatchers.IO) {
-              db.taskDao().deleteTask(db.taskDao().getTask(adapter.getItemId(position)))
-            }
-          } else if (direction == ItemTouchHelper.RIGHT) {
+          if (direction == ItemTouchHelper.RIGHT) {
             dingPlayer?.start()
             GlobalScope.launch(Dispatchers.IO) {
               val taskId = adapter.getItemId(position)
@@ -125,26 +121,6 @@ class MainActivity : AppCompatActivity() {
               canvas.drawBitmap(
                 icon,
                 itemView.left.toFloat(),
-                itemView.top.toFloat() +
-                  (itemView.bottom.toFloat() - itemView.top.toFloat() - icon.height.toFloat()) / 2,
-                paint
-              )
-            } else {
-              icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_delete_white_png)
-
-              paint.color = resources.getColor(R.color.deletion_red, null)
-
-              canvas.drawRect(
-                itemView.right.toFloat() + dX,
-                itemView.top.toFloat(),
-                itemView.right.toFloat(),
-                itemView.bottom.toFloat(),
-                paint
-              )
-
-              canvas.drawBitmap(
-                icon,
-                itemView.right.toFloat() - icon.width,
                 itemView.top.toFloat() +
                   (itemView.bottom.toFloat() - itemView.top.toFloat() - icon.height.toFloat()) / 2,
                 paint
@@ -239,5 +215,4 @@ class MainActivity : AppCompatActivity() {
     super.onDestroy()
     dingPlayer?.release()
   }
-
 }
