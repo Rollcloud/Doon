@@ -13,7 +13,7 @@
     <string name="save_new_task">Create Task</string>
     <!-- edit task -->
     <string name="edit_task">Edit Task</string>
-    <string name="save_edit_task">Save Task</string>
+    <string name="save_edit_task">Update Task</string>
     <!-- item -->
     <string name="next_label">Next Due</string>
     <string name="delta_label">Due</string>

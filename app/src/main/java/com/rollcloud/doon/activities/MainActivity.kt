@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rollcloud.doon.Action
 import com.rollcloud.doon.AppDatabase
+import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
 import com.rollcloud.doon.TaskWithActions
 import com.rollcloud.doon.adapters.TaskAdapter
@@ -211,8 +212,11 @@ class MainActivity : AppCompatActivity() {
     startActivity(Intent(this, NewTaskActivity::class.java))
   }
 
-  fun openEditTask(view: View, taskId: Long) {
-    startActivity(Intent(this, NewTaskActivity::class.java).putExtra("TaskId", taskId))
+  fun openEditTask(view: View) {
+    val position = tasks_RV.getChildAdapterPosition(view)
+    val taskId = adapter.getItemId(position)
+    val intent = Intent(this, NewTaskActivity::class.java).apply { putExtra(EXTRA_TASK_ID, taskId) }
+    startActivity(intent)
   }
 
   override fun onDestroy() {

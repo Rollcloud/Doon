@@ -7,6 +7,7 @@ import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.rollcloud.doon.AppDatabase
 import com.rollcloud.doon.Constants
+import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
 import com.rollcloud.doon.Task
 import java.text.SimpleDateFormat
@@ -32,14 +33,16 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
   private val now = System.currentTimeMillis()
   private var startDate: Long = now
 
-  private val bundle = intent.extras
-  private val taskId = bundle?.getLong("TaskId")
-  private val isNew = taskId == null
+  private var taskId = -1L
+  private var isNew = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     /* Creates UI. */
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_task_new)
+
+    taskId = intent.getLongExtra(EXTRA_TASK_ID, -1L)
+    isNew = taskId == -1L
 
     dateEdt.setOnClickListener(this)
     saveBtn.setOnClickListener(this)
@@ -60,25 +63,25 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
   private fun setDefaults() {
     if (isNew) {
-      toolbarAddTask.title = R.string.new_task.toString()
-      saveBtn.text = R.string.save_new_task.toString()
+      toolbarAddTask.title = getString(R.string.new_task)
+      saveBtn.text = getString(R.string.save_new_task)
       dateEdt.setText(sdf.format(now))
       nameInputLayout.editText?.requestFocus()
     } else {
-      toolbarAddTask.title = R.string.edit_task.toString()
-      saveBtn.text = R.string.save_edit_task.toString()
+      toolbarAddTask.title = getString(R.string.edit_task)
+      saveBtn.text = getString(R.string.save_edit_task)
 
       GlobalScope.launch(Dispatchers.Main) {
-        val task = withContext(Dispatchers.IO) {
-          return@withContext db.taskDao().getTask(taskId!!)
-        }
-
+        val task =
+          withContext(Dispatchers.IO) {
+            return@withContext db.taskDao().getTask(taskId)
+          }
         nameInputLayout.editText?.setText(task.name)
         dateEdt.isEnabled = false
         dateEdt.setText(sdf.format(task.startDate))
-        frequencyInputLayout.editText?.setText(task.frequency.toDuration(MILLISECONDS).inWholeDays.toString())
-
-        finish()
+        frequencyInputLayout.editText?.setText(
+          task.frequency.toDuration(MILLISECONDS).inWholeDays.toString()
+        )
       }
     }
   }
@@ -91,7 +94,13 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
     GlobalScope.launch(Dispatchers.Main) {
       withContext(Dispatchers.IO) {
-        return@withContext db.taskDao().insertTask(Task(title, startDate, frequency, 1))
+        if (isNew) {
+          val task = Task(title, startDate, frequency, 1)
+          return@withContext db.taskDao().insertTask(task)
+        } else {
+          val task = Task(title, startDate, frequency, 1, taskId)
+          return@withContext db.taskDao().updateTask(task)
+        }
       }
       finish()
     }

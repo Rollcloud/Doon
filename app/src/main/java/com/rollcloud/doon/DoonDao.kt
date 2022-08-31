@@ -7,7 +7,7 @@ import androidx.room.*
 interface TaskDao {
   @Insert(onConflict = OnConflictStrategy.ABORT) fun insertTask(task: Task)
 
-  //  @Update fun updateTask(task: Task)
+  @Update fun updateTask(task: Task)
 
   @Delete fun deleteTask(task: Task)
 
@@ -26,7 +26,8 @@ interface ActionDao {
 
   //  @Delete fun deleteAction(action: Action)
 
-  @Query("SELECT * FROM `action` ORDER BY timestamp DESC") fun getActions(): LiveData<List<ActionWithTask>>
+  @Query("SELECT * FROM `action` ORDER BY timestamp DESC")
+  fun getActions(): LiveData<List<ActionWithTask>>
 
   @Query(
     "SELECT *, " +
