@@ -1,12 +1,12 @@
-package com.rollcloud.doon.adapters
+package com.rollcloud.doon.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rollcloud.doon.ActionWithTask
 import com.rollcloud.doon.R
-import com.rollcloud.doon.Task
+import com.rollcloud.doon.data.room.ActionWithTask
+import com.rollcloud.doon.data.room.Task
 import java.time.format.TextStyle
 import java.util.*
 import kotlin.math.absoluteValue

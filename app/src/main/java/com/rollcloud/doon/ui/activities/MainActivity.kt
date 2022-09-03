@@ -1,4 +1,4 @@
-package com.rollcloud.doon.activities
+package com.rollcloud.doon.ui.activities
 
 import android.content.Intent
 import android.graphics.*
@@ -14,12 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rollcloud.doon.Action
-import com.rollcloud.doon.AppDatabase
 import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
-import com.rollcloud.doon.TaskWithActions
-import com.rollcloud.doon.adapters.TaskAdapter
+import com.rollcloud.doon.data.room.Action
+import com.rollcloud.doon.data.room.AppDatabase
+import com.rollcloud.doon.data.room.TaskWithActions
+import com.rollcloud.doon.ui.adapters.TaskAdapter
 import java.lang.System.currentTimeMillis
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers

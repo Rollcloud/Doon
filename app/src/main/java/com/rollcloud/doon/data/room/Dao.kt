@@ -1,4 +1,4 @@
-package com.rollcloud.doon
+package com.rollcloud.doon.data.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

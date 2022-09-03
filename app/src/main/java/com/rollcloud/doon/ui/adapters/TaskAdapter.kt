@@ -1,15 +1,13 @@
-package com.rollcloud.doon.adapters
+package com.rollcloud.doon.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rollcloud.doon.Action
 import com.rollcloud.doon.R
-import com.rollcloud.doon.TaskWithActions
+import com.rollcloud.doon.data.room.TaskWithActions
 import java.time.format.TextStyle
 import java.util.*
-import kotlin.collections.zipWithNext
 import kotlin.time.Duration
 import kotlin.time.DurationUnit.DAYS
 import kotlin.time.DurationUnit.MILLISECONDS
@@ -20,24 +18,6 @@ import kotlinx.datetime.TimeZone
 
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-
-  companion object {
-    fun calculateScore(frequency: Duration, timestampDeltas: List<Long>): Float? {
-      /*
-       * A scoring algorithm for timeliness of task performance.
-       * Must provide an output in decimal days.
-       */
-      // Average interval of last 5 actions - frequency
-      if (timestampDeltas.isEmpty()) return null
-      val scoringDeltas: List<Long>
-      val n = 5
-      scoringDeltas = if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
-      val numberDeltas = scoringDeltas.size
-      val meanInterval: Duration = scoringDeltas.sum().toDuration(MILLISECONDS) / numberDeltas
-      val score = meanInterval - frequency
-      return score.inWholeHours / 24F
-    }
-  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
     return TaskViewHolder(
@@ -77,15 +57,12 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
         updateColorTag(nextDue, queuedThreshold)
         updateDueDate(nextDue)
         updateDueDelta(nextDue)
-        updateScore(frequency, actionsTask.actions)
+        updateScore(actionsTask)
       }
     }
 
-    private fun updateScore(frequency: Duration, actions: List<Action>) {
-      val timestamps = actions.map { it.timestamp }
-      val deltas = timestamps.zipWithNext { a, b -> b - a }
-      val score = calculateScore(frequency, deltas)
-      if (score == null) return // don't show score if null
+    private fun updateScore(actionsTask: TaskWithActions) {
+      val score = actionsTask.calculateScore() ?: return
       itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 

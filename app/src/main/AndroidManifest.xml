@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Saltire.Light">
         <activity
-            android:name="com.rollcloud.doon.activities.HistoryActivity"
+            android:name="com.rollcloud.doon.ui.activities.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name="com.rollcloud.doon.activities.NewTaskActivity"
+            android:name="com.rollcloud.doon.ui.activities.NewTaskActivity"
             android:exported="false" />
         <activity
-            android:name="com.rollcloud.doon.activities.MainActivity"
+            android:name="com.rollcloud.doon.ui.activities.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DoonSplash">
             <intent-filter>

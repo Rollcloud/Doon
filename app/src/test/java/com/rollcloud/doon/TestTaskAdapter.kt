@@ -1,6 +1,6 @@
 package com.rollcloud.doon
 
-import com.rollcloud.doon.adapters.TaskAdapter
+import com.rollcloud.doon.ui.adapters.TaskAdapter
 import kotlin.time.Duration
 import kotlin.time.DurationUnit.DAYS
 import kotlin.time.DurationUnit.MILLISECONDS

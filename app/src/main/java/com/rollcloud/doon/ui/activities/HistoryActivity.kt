@@ -1,4 +1,4 @@
-package com.rollcloud.doon.activities
+package com.rollcloud.doon.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.rollcloud.doon.ActionWithTask
-import com.rollcloud.doon.AppDatabase
 import com.rollcloud.doon.R
-import com.rollcloud.doon.adapters.ActionsAdapter
+import com.rollcloud.doon.data.room.ActionWithTask
+import com.rollcloud.doon.data.room.AppDatabase
+import com.rollcloud.doon.ui.adapters.ActionsAdapter
 import kotlinx.android.synthetic.main.activity_history.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 

@@ -1,15 +1,15 @@
-package com.rollcloud.doon.activities
+package com.rollcloud.doon.ui.activities
 
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
-import com.rollcloud.doon.AppDatabase
-import com.rollcloud.doon.Constants
+import com.rollcloud.doon.Constants.DATE_FORMAT
 import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
-import com.rollcloud.doon.Task
+import com.rollcloud.doon.data.room.AppDatabase
+import com.rollcloud.doon.data.room.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.DurationUnit.DAYS
@@ -28,7 +28,7 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
   private val db by lazy { AppDatabase.getDatabase(this) }
 
-  private val sdf = SimpleDateFormat(Constants.dateFormat)
+  private val sdf = SimpleDateFormat(DATE_FORMAT)
 
   private val now = System.currentTimeMillis()
   private var startDate: Long = now
