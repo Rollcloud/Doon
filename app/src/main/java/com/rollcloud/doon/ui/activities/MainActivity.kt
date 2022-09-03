@@ -19,6 +19,7 @@ import com.rollcloud.doon.R
 import com.rollcloud.doon.data.room.Action
 import com.rollcloud.doon.data.room.AppDatabase
 import com.rollcloud.doon.data.room.TaskWithActions
+import com.rollcloud.doon.toHoursAndDays
 import com.rollcloud.doon.ui.adapters.TaskAdapter
 import java.lang.System.currentTimeMillis
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
       adapter = this@MainActivity.adapter
     }
 
+
     initSwipe()
 
     db
@@ -57,9 +59,11 @@ class MainActivity : AppCompatActivity() {
             actionsTasks.clear()
             actionsTasks.addAll(it)
             adapter.notifyDataSetChanged()
+            updateScore()
           } else {
             actionsTasks.clear()
             adapter.notifyDataSetChanged()
+            updateScore()
           }
         }
       )
@@ -146,6 +150,12 @@ class MainActivity : AppCompatActivity() {
     itemTouchHelper.attachToRecyclerView(tasks_RV)
   }
 
+  fun updateScore() {
+    val taskScores = actionsTasks.map { it.calculateScore() ?: 0F }
+    val totalScore = taskScores.average()
+    showScore.text = totalScore.toHoursAndDays(signed = true)
+  }
+
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     menuInflater.inflate(R.menu.main_menu, menu)
     val item = menu.findItem(R.id.search)
@@ -194,6 +204,7 @@ class MainActivity : AppCompatActivity() {
               it.filter { actionsTask -> actionsTask.task.name.contains(newText, true) }
             )
             adapter.notifyDataSetChanged()
+            updateScore()
           }
         }
       )

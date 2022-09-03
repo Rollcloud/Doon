@@ -14,6 +14,9 @@
     <!-- edit task -->
     <string name="edit_task">Edit Task</string>
     <string name="save_edit_task">Update Task</string>
+    <!-- summary -->
+    <string name="score_total">Score</string>
+    <string name="score_label">Overall Timeliness</string>
     <!-- item -->
     <string name="next_label">Next Due</string>
     <string name="delta_label">Due</string>
