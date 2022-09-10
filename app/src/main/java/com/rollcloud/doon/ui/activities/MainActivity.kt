@@ -19,15 +19,20 @@ import com.rollcloud.doon.R
 import com.rollcloud.doon.data.room.Action
 import com.rollcloud.doon.data.room.AppDatabase
 import com.rollcloud.doon.data.room.TaskWithActions
-import com.rollcloud.doon.toHoursAndDays
 import com.rollcloud.doon.ui.adapters.TaskAdapter
 import java.lang.System.currentTimeMillis
+import kotlin.math.absoluteValue
+import kotlin.math.min
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 class MainActivity : AppCompatActivity() {
+
+  val clock: Clock = Clock.System
 
   private val actionsTasks = arrayListOf<TaskWithActions>()
   var adapter = TaskAdapter(actionsTasks)
@@ -45,7 +50,6 @@ class MainActivity : AppCompatActivity() {
       layoutManager = LinearLayoutManager(this@MainActivity)
       adapter = this@MainActivity.adapter
     }
-
 
     initSwipe()
 
@@ -151,9 +155,21 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun updateScore() {
-    val taskScores = actionsTasks.map { it.calculateScore() ?: 0F }
-    val totalScore = taskScores.average()
-    showScore.text = totalScore.toHoursAndDays(signed = true)
+    val now: Instant = clock.now()
+    val taskScores = actionsTasks.map { min(it.getDaysTillDue(), 0) }
+    val totalScore = taskScores.sum()
+    //    showScore.text = totalScore.toHoursAndDays(signed = true)
+    showScore.text = "${totalScore.absoluteValue} task⋅days"
+    showScore.setTextColor(
+      resources.getColor(
+        if (totalScore >= 0) R.color.completion_green else R.color.deletion_red,
+        null
+      )
+    )
+    scoreDescription.text =
+      resources.getString(
+        if (totalScore >= 0) R.string.score_label_pos else R.string.score_label_neg
+      )
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

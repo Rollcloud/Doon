@@ -16,7 +16,8 @@
     <string name="save_edit_task">Update Task</string>
     <!-- summary -->
     <string name="score_total">Score</string>
-    <string name="score_label">Overall Timeliness</string>
+    <string name="score_label_neg">Behind Schedule</string>
+    <string name="score_label_pos">Ahead of Schedule</string>
     <!-- item -->
     <string name="next_label">Next Due</string>
     <string name="delta_label">Due</string>

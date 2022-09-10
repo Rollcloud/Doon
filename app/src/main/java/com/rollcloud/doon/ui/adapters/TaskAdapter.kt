@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.item_task.view.*
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 
+val clock: Clock = Clock.System
+
 class TaskAdapter(private val modelList: List<TaskWithActions>) :
   RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
@@ -44,11 +46,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       /* Sets values in UI. */
       with(itemView) {
         val frequency: Duration = actionsTask.task.frequency.toDuration(MILLISECONDS)
-        val nextDue: Instant =
-          Instant.fromEpochMilliseconds(
-            if (actionsTask.actions.isEmpty()) actionsTask.task.startDate
-            else actionsTask.actions.last().timestamp + actionsTask.task.frequency
-          )
+        val nextDue: Instant = actionsTask.getNextDue()
         val queuedThreshold: Duration = (frequency / 3)
 
         txtShowName.text = actionsTask.task.name
@@ -62,7 +60,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     }
 
     private fun updateScore(actionsTask: TaskWithActions) {
-      val score = actionsTask.calculateScore() ?: return
+      val score = actionsTask.movingAverageFrequency() ?: return
       itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 
@@ -72,7 +70,6 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val colorDue = colors[13]
       val colorOverdue = colors[0]
 
-      val clock: Clock = Clock.System
       val now: Instant = clock.now()
       val timeUntil: Duration = nextDue - now
 
@@ -96,7 +93,6 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
 
     private fun updateDueDelta(nextDue: Instant) {
       val dueDate: LocalDate = nextDue.toLocalDateTime(localTimeZone).date
-      val clock: Clock = Clock.System
       val today: LocalDate = clock.todayIn(localTimeZone)
       val daysUntil: Int = (dueDate - today).days
 

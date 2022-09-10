@@ -2,9 +2,15 @@ package com.rollcloud.doon.data.room
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.rollcloud.doon.ui.adapters.clock
+import java.util.*
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
+import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
+
+private val localTimeZone = TimeZone.currentSystemDefault()
 
 @Entity
 data class Task(
@@ -36,7 +42,7 @@ data class TaskWithActions(
   @Embedded val task: Task,
   @Relation(parentColumn = "id", entityColumn = "task_id") val actions: List<Action>
 ) {
-  fun calculateScore(): Float? {
+  fun movingAverageFrequency(): Float? {
     /*
      * A scoring algorithm for timeliness of task performance.
      * Must provide an output in decimal days.
@@ -56,6 +62,23 @@ data class TaskWithActions(
       scoringDeltas.sum().toDuration(DurationUnit.MILLISECONDS) / numberDeltas
     val score = meanInterval - frequency
     return score.inWholeHours / 24F
+  }
+
+  fun getNextDue(): Instant {
+    return Instant.fromEpochMilliseconds(
+      if (actions.isEmpty()) task.startDate else actions.last().timestamp + task.frequency
+    )
+  }
+
+  /**
+   * Returns the number of days till the task is due. Overdue tasks will return a negative number.
+   */
+  fun getDaysTillDue(): Int {
+    val dueDate: LocalDate = getNextDue().toLocalDateTime(localTimeZone).date
+    val today: LocalDate = clock.todayIn(localTimeZone)
+    val daysUntil: Int = (dueDate - today).days
+
+    return daysUntil
   }
 }
 
