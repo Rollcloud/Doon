@@ -60,7 +60,8 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     }
 
     private fun updateScore(actionsTask: TaskWithActions) {
-      val score = actionsTask.movingAverageFrequency() ?: return
+      val length = 3
+      val score = actionsTask.movingAverageFrequency(length) ?: return
       itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 

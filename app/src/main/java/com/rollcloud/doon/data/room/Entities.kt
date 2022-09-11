@@ -3,7 +3,6 @@ package com.rollcloud.doon.data.room
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 import com.rollcloud.doon.ui.adapters.clock
-import java.util.*
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -42,13 +41,12 @@ data class TaskWithActions(
   @Embedded val task: Task,
   @Relation(parentColumn = "id", entityColumn = "task_id") val actions: List<Action>
 ) {
-  fun movingAverageFrequency(): Float? {
-    /*
-     * A scoring algorithm for timeliness of task performance.
-     * Must provide an output in decimal days.
-     * Returns frequency subtracted from the average interval of last 5 actions.
-     */
-    val n = 5
+
+  /**
+   * Calculates the average actual frequency delta over the last `length` actions.
+   * Returns the result in decimal days, where more frequent performance is negative.
+   */
+  fun movingAverageFrequency(length:Int): Float? {
     val timestamps = actions.map { it.timestamp }
     val timestampDeltas = timestamps.zipWithNext { a, b -> b - a }
     val frequency: Duration = task.frequency.toDuration(DurationUnit.MILLISECONDS)
@@ -56,7 +54,7 @@ data class TaskWithActions(
     if (timestampDeltas.isEmpty()) return null
 
     val scoringDeltas =
-      if (timestampDeltas.size < n) timestampDeltas else timestampDeltas.takeLast(n)
+      if (timestampDeltas.size < length) timestampDeltas else timestampDeltas.takeLast(length)
     val numberDeltas = scoringDeltas.size
     val meanInterval: Duration =
       scoringDeltas.sum().toDuration(DurationUnit.MILLISECONDS) / numberDeltas
