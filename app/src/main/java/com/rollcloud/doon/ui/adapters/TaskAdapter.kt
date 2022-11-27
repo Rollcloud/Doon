@@ -97,7 +97,7 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
     private fun updateDueDelta(nextDue: Instant) {
       val dueDate: LocalDate = nextDue.toLocalDateTime(localTimeZone).date
       val today: LocalDate = clock.todayIn(localTimeZone)
-      val daysUntil: Int = (dueDate - today).days
+      val daysUntil: Int = today.daysUntil(dueDate)
 
       when {
         daysUntil > 1 -> itemView.txtShowDelta.text = "In $daysUntil days"

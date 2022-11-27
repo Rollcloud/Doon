@@ -91,9 +91,7 @@ data class TaskWithActions(
   fun getDaysTillDue(): Int {
     val dueDate: LocalDate = getNextDue().toLocalDateTime(localTimeZone).date
     val today: LocalDate = clock.todayIn(localTimeZone)
-    val daysUntil: Int = (dueDate - today).days
-
-    return daysUntil
+    return today.daysUntil(dueDate)
   }
 }
 
