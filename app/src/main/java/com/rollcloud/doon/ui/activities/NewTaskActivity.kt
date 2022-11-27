@@ -16,10 +16,7 @@ import kotlin.time.DurationUnit.DAYS
 import kotlin.time.DurationUnit.MILLISECONDS
 import kotlin.time.toDuration
 import kotlinx.android.synthetic.main.activity_task_new.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -46,6 +43,7 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
     dateEdt.setOnClickListener(this)
     saveBtn.setOnClickListener(this)
+    deleteBtn.setOnClickListener(this)
 
     setDefaults()
   }
@@ -58,6 +56,9 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
       R.id.saveBtn -> {
         saveTodo()
       }
+      R.id.deleteBtn -> {
+        deleteTodo()
+      }
     }
   }
 
@@ -65,6 +66,7 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     if (isNew) {
       toolbarAddTask.title = getString(R.string.new_task)
       saveBtn.text = getString(R.string.save_new_task)
+      deleteBtn.visibility = View.GONE;
       dateEdt.setText(sdf.format(now))
       nameInputLayout.editText?.requestFocus()
     } else {
@@ -94,12 +96,26 @@ class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
     GlobalScope.launch(Dispatchers.Main) {
       withContext(Dispatchers.IO) {
-        if (isNew) {
-          val task = Task(title, startDate, frequency, 1)
-          return@withContext db.taskDao().insertTask(task)
-        } else {
           val task = Task(title, startDate, frequency, 1, taskId)
           return@withContext db.taskDao().updateTask(task)
+      }
+      finish()
+    }
+  }
+
+  private fun deleteTodo() {
+    /* Retrieves values from UI. */
+    val title = nameInputLayout.editText?.text.toString().trim()
+    val frequencyDays = frequencyInputLayout.editText?.text.toString().toInt()
+    val frequency: Long = frequencyDays.toDuration(DAYS).toLong(MILLISECONDS)
+
+    GlobalScope.launch(Dispatchers.Main) {
+      withContext(Dispatchers.IO) {
+        if (isNew) {
+          return@withContext
+        } else {
+          val task = Task(title, startDate, frequency, 1, taskId)
+          return@withContext db.taskDao().deleteTask(task)
         }
       }
       finish()

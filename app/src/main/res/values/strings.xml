@@ -11,6 +11,7 @@
     <string name="enter_frequency">Set Frequency</string>
     <string name="frequency_hint">Enter frequency in days</string>
     <string name="save_new_task">Create Task</string>
+    <string name="delete_task">Delete Task</string>
     <!-- edit task -->
     <string name="edit_task">Edit Task</string>
     <string name="save_edit_task">Update Task</string>
