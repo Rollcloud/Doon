@@ -51,26 +51,14 @@ class MainActivity : AppCompatActivity() {
       adapter = this@MainActivity.adapter
     }
 
+    tasks_SRL.setOnRefreshListener {
+      tasks_SRL.isRefreshing = false
+      loadTasks(adapter)
+    }
+
     initSwipe()
 
-    db
-      .actionDao()
-      .loadTasksAndActions()
-      .observe(
-        this,
-        Observer {
-          if (!it.isNullOrEmpty()) {
-            actionsTasks.clear()
-            actionsTasks.addAll(it)
-            adapter.notifyDataSetChanged()
-            updateScore()
-          } else {
-            actionsTasks.clear()
-            adapter.notifyDataSetChanged()
-            updateScore()
-          }
-        }
-      )
+    loadTasks(adapter)
   }
 
   private fun initSwipe() {
@@ -172,6 +160,28 @@ class MainActivity : AppCompatActivity() {
     scoreDescription.text =
       resources.getString(
         if (totalScore >= 0) R.string.score_label_pos else R.string.score_label_neg
+      )
+  }
+
+  private fun loadTasks(adapter: TaskAdapter)
+  {
+    db
+      .actionDao()
+      .loadTasksAndActions()
+      .observe(
+        this,
+        Observer {
+          if (!it.isNullOrEmpty()) {
+            actionsTasks.clear()
+            actionsTasks.addAll(it)
+            adapter.notifyDataSetChanged()
+            updateScore()
+          } else {
+            actionsTasks.clear()
+            adapter.notifyDataSetChanged()
+            updateScore()
+          }
+        }
       )
   }
 
