@@ -43,10 +43,10 @@ data class TaskWithActions(
 ) {
 
   /**
-   * Calculates the average actual frequency delta over the last `length` actions.
-   * Returns the result in decimal days, where more frequent performance is negative.
+   * Calculates the average actual frequency delta over the last `length` actions. Returns the
+   * result in decimal days, where more frequent performance is negative.
    */
-  fun movingAverageFrequency(length:Int): Float? {
+  fun movingAverageFrequency(length: Int): Float? {
     val timestamps = actions.map { it.timestamp }
     val timestampDeltas = timestamps.zipWithNext { a, b -> b - a }
     val frequency: Duration = task.frequency.toDuration(DurationUnit.MILLISECONDS)

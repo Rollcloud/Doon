@@ -20,14 +20,15 @@ import com.rollcloud.doon.data.room.Action
 import com.rollcloud.doon.data.room.AppDatabase
 import com.rollcloud.doon.data.room.TaskWithActions
 import com.rollcloud.doon.ui.adapters.TaskAdapter
-import java.lang.System.currentTimeMillis
-import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import java.lang.System.currentTimeMillis
+import kotlin.math.absoluteValue
+
 
 class MainActivity : AppCompatActivity() {
 
