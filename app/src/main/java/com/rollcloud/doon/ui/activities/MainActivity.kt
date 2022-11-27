@@ -22,8 +22,6 @@ import com.rollcloud.doon.data.room.TaskWithActions
 import com.rollcloud.doon.ui.adapters.TaskAdapter
 import java.lang.System.currentTimeMillis
 import kotlin.math.absoluteValue
-import kotlin.math.min
-import kotlin.math.roundToInt
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -159,7 +157,7 @@ class MainActivity : AppCompatActivity() {
     val now: Instant = clock.now()
     val taskScores =
       actionsTasks.map {
-        min(it.getDaysTillDue(), 0) - min((it.movingAverageFrequency(1) ?: 0F).roundToInt(), 0)
+        it.getDaysTillDue().coerceAtMost(0) - (it.getLastDueDelta()?:0).coerceAtMost(0)
       }
     val totalScore = taskScores.sum()
     //    showScore.text = totalScore.toHoursAndDays(signed = true)

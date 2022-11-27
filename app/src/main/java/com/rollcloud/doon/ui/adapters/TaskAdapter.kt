@@ -61,8 +61,10 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
 
     private fun updateScore(actionsTask: TaskWithActions) {
       val length = 3
-      val score = actionsTask.movingAverageFrequency(length) ?: return
-      itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
+      val score = actionsTask.getLastDueDelta() ?: return
+      itemView.txtShowScore.text = "${"%+d".format(score.coerceAtMost(0))} days"
+//      val score = actionsTask.movingAverageFrequency(length) ?: return
+//      itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 
     private fun updateColorTag(nextDue: Instant, queuedThreshold: Duration) {

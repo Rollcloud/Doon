@@ -62,6 +62,23 @@ data class TaskWithActions(
     return score.inWholeHours / 24F
   }
 
+  /**
+   * Calculate how early or behind schedule the last action performed for this task was. Returns the
+   * number of days different from the frequency, early actions return a negative result.
+   */
+  fun getLastDueDelta(): Int? {
+    val timestamps = actions.takeLast(2).map { it.timestamp }
+    val timestampDates =
+      timestamps.map { Instant.fromEpochMilliseconds(it).toLocalDateTime(localTimeZone).date }
+    val timestampDeltaDays = timestampDates.zipWithNext { a, b -> b - a }
+
+    if (timestampDeltaDays.isEmpty()) return null
+
+    val lastInterval = timestampDeltaDays.first().days
+    val frequency: Int = task.frequency.toDuration(DurationUnit.MILLISECONDS).inWholeDays.toInt()
+    return lastInterval - frequency
+  }
+
   fun getNextDue(): Instant {
     return Instant.fromEpochMilliseconds(
       if (actions.isEmpty()) task.startDate else actions.last().timestamp + task.frequency
