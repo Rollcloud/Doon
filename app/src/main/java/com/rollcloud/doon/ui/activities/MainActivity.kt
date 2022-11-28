@@ -14,21 +14,19 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
 import com.rollcloud.doon.data.room.Action
 import com.rollcloud.doon.data.room.AppDatabase
 import com.rollcloud.doon.data.room.TaskWithActions
 import com.rollcloud.doon.ui.adapters.TaskAdapter
+import java.lang.System.currentTimeMillis
+import kotlin.math.absoluteValue
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import java.lang.System.currentTimeMillis
-import kotlin.math.absoluteValue
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,14 +44,15 @@ class MainActivity : AppCompatActivity() {
     installSplashScreen()
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
-    tasks_RV.apply {
-      layoutManager = LinearLayoutManager(this@MainActivity)
-      adapter = this@MainActivity.adapter
-    }
 
     tasks_SRL.setOnRefreshListener {
       tasks_SRL.isRefreshing = false
       loadTasks(adapter)
+    }
+
+    tasks_RV.apply {
+      layoutManager = LinearLayoutManager(this@MainActivity)
+      adapter = this@MainActivity.adapter
     }
 
     initSwipe()
@@ -146,7 +145,7 @@ class MainActivity : AppCompatActivity() {
     val now: Instant = clock.now()
     val taskScores =
       actionsTasks.map {
-        it.getDaysTillDue().coerceAtMost(0) - (it.getLastDueDelta()?:0).coerceAtMost(0)
+        it.getDaysTillDue().coerceAtMost(0) - (it.getLastDueDelta() ?: 0).coerceAtMost(0)
       }
     val totalScore = taskScores.sum()
     //    showScore.text = totalScore.toHoursAndDays(signed = true)
@@ -163,8 +162,7 @@ class MainActivity : AppCompatActivity() {
       )
   }
 
-  private fun loadTasks(adapter: TaskAdapter)
-  {
+  private fun loadTasks(adapter: TaskAdapter) {
     db
       .actionDao()
       .loadTasksAndActions()
@@ -250,13 +248,6 @@ class MainActivity : AppCompatActivity() {
 
   fun openNewTask(view: View) {
     startActivity(Intent(this, NewTaskActivity::class.java))
-  }
-
-  fun openEditTask(view: View) {
-    val position = tasks_RV.getChildAdapterPosition(view)
-    val taskId = adapter.getItemId(position)
-    val intent = Intent(this, NewTaskActivity::class.java).apply { putExtra(EXTRA_TASK_ID, taskId) }
-    startActivity(intent)
   }
 
   override fun onDestroy() {

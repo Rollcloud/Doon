@@ -29,6 +29,10 @@ interface ActionDao {
   @Query("SELECT * FROM `action` ORDER BY timestamp DESC")
   fun getActions(): LiveData<List<ActionWithTask>>
 
+  @Query("SELECT * FROM `action` WHERE task_id = :task_uid ORDER BY timestamp DESC")
+  fun getActionsByTask(task_uid: Long): LiveData<List<ActionWithTask>>
+
+
   @Query(
     "SELECT *, " +
       "(SELECT " +

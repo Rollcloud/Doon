@@ -1,11 +1,15 @@
 package com.rollcloud.doon.ui.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.rollcloud.doon.Constants.EXTRA_TASK_ID
 import com.rollcloud.doon.R
 import com.rollcloud.doon.data.room.TaskWithActions
+import com.rollcloud.doon.ui.activities.HistoryActivity
+import com.rollcloud.doon.ui.activities.NewTaskActivity
 import java.time.format.TextStyle
 import java.util.*
 import kotlin.time.Duration
@@ -56,6 +60,19 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
         updateDueDate(nextDue)
         updateDueDelta(nextDue)
         updateScore(actionsTask)
+
+        taskCard.setOnClickListener(){
+          val taskId = actionsTask.task.id
+          context.startActivity(Intent(context, HistoryActivity::class.java).apply { putExtra(EXTRA_TASK_ID, taskId) })
+          return@setOnClickListener
+        }
+
+        taskCard.setOnLongClickListener{
+          val taskId = actionsTask.task.id
+          context.startActivity(Intent(context, NewTaskActivity::class.java).apply { putExtra(EXTRA_TASK_ID, taskId) })
+          return@setOnLongClickListener true
+        }
+
       }
     }
 
@@ -63,8 +80,8 @@ class TaskAdapter(private val modelList: List<TaskWithActions>) :
       val length = 3
       val score = actionsTask.getLastDueDelta() ?: return
       itemView.txtShowScore.text = "${"%+d".format(score.coerceAtMost(0))} days"
-//      val score = actionsTask.movingAverageFrequency(length) ?: return
-//      itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
+      //      val score = actionsTask.movingAverageFrequency(length) ?: return
+      //      itemView.txtShowScore.text = "${"%+.1f".format(score)} days"
     }
 
     private fun updateColorTag(nextDue: Instant, queuedThreshold: Duration) {
