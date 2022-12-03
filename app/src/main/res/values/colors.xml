@@ -32,8 +32,28 @@
         <item name="yellow_400" type="color">#ffee58</item>
         <item name="orange_400" type="color">#ffa726</item>
         <item name="deep_orange_400" type="color">#ff7043</item>
-        <item name="brown_400" type="color">#8d6e63</item>
-        <item name="grey_400" type="color">#bdbdbd</item>
-        <item name="blue_grey_400" type="color">#78909c</item>
+<!--        <item name="brown_400" type="color">#8d6e63</item>-->
+<!--        <item name="grey_400" type="color">#bdbdbd</item>-->
+<!--        <item name="blue_grey_400" type="color">#78909c</item>-->
     </array>
+
+    <array name="colors_a400">
+        <item name="red_a400" type="color">#FF1744</item>
+        <item name="pink_a400" type="color">#F50057</item>
+        <item name="purple_a400" type="color">#D500F9</item>
+        <item name="deep_purple_a400" type="color">#651FFF</item>
+        <item name="indigo_a400" type="color">#651FFF</item>
+        <item name="blue_a400" type="color">#3D5AFE</item>
+        <item name="light_blue_a400" type="color">#00B0FF</item>
+        <item name="cyan_a400" type="color">#00E5FF</item>
+        <item name="teal_a400" type="color">#1DE9B6</item>
+        <item name="green_a400" type="color">#00E676</item>
+        <item name="light_green_a400" type="color">#76FF03</item>
+        <item name="lime_a400" type="color">#C6FF00</item>
+        <item name="yellow_a400" type="color">#FFEA00</item>
+        <item name="amber_a400" type="color">#FFC400</item>
+        <item name="orange_a400" type="color">#FF9100</item>
+        <item name="deep_orange_a400" type="color">#FF3D00</item>
+    </array>
+
 </resources>

@@ -1,13 +1,15 @@
 package com.rollcloud.doon.data.room
 
+import android.content.Context
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.rollcloud.doon.R
 import com.rollcloud.doon.ui.adapters.clock
+import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 import kotlinx.datetime.*
-import kotlinx.datetime.TimeZone
 
 private val localTimeZone = TimeZone.currentSystemDefault()
 
@@ -18,7 +20,14 @@ data class Task(
   var frequency: Long,
   var isActive: Int = 0,
   @PrimaryKey(autoGenerate = true) var id: Long = 0
-)
+) {
+
+  fun getColour(context: Context): Int {
+    val colors = context.resources.getIntArray(R.array.colors_400)
+    val taskHash = "${id}${name}".hashCode().absoluteValue
+    return colors[taskHash % colors.size]
+  }
+}
 
 @Entity(
   foreignKeys =
