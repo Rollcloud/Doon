@@ -1,22 +1,25 @@
 package com.rollcloud.doon.ui.activities
 
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.rollcloud.doon.ActionDecorator
 import com.rollcloud.doon.Constants
 import com.rollcloud.doon.R
+import com.rollcloud.doon.TodayDecorator
 import com.rollcloud.doon.data.room.*
 import com.rollcloud.doon.ui.adapters.ActionsAdapter
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlinx.android.synthetic.main.activity_history.*
 import kotlinx.android.synthetic.main.activity_history.view.*
-import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_task_new.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -60,24 +63,30 @@ class HistoryActivity : AppCompatActivity() {
       adapter = this@HistoryActivity.adapter
     }
 
-    calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_NONE
+    val typedValue = TypedValue()
+    theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+    val primaryColor = typedValue.data
 
+    calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_NONE
     var actionDates: List<CalendarDay> = emptyList()
 
     getActionsFromDB(taskId)
       .observe(
         this@HistoryActivity,
-        Observer {
-          if (!it.isNullOrEmpty()) {
+        Observer { list ->
+          if (!list.isNullOrEmpty()) {
             actionDates =
-              it.map { actionWithTask ->
+              list.map { actionWithTask ->
                 epochSecondsToCalendarDay(actionWithTask.action.timestamp, localTimeZone)
               }
-            calendarView.addDecorators(
-              ActionDecorator(R.attr.colorPrimary, actionDates.toHashSet())
-            )
+            list.forEach {
+              calendarView.addDecorators(
+                ActionDecorator(it.task.getColour(this@HistoryActivity), actionDates.toHashSet())
+              )
+            }
+            calendarView.addDecorators(TodayDecorator(primaryColor))
             modelList.clear()
-            modelList.addAll(it)
+            modelList.addAll(list)
             adapter.notifyDataSetChanged()
           } else {
             modelList.clear()

@@ -4,6 +4,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.CircleSpan
+import com.prolificinteractive.materialcalendarview.spans.DonutSpan
+import com.rollcloud.doon.data.room.Task
 import kotlin.math.absoluteValue
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -21,6 +23,7 @@ fun Float.toHoursAndDays(signed: Boolean = false): String {
     if (whole >= 1) "$whole days" else ""
 }
 
+
 class ActionDecorator(private val color: Int, dates: Collection<CalendarDay>) : DayViewDecorator {
   private val dates: HashSet<CalendarDay>
 
@@ -34,5 +37,16 @@ class ActionDecorator(private val color: Int, dates: Collection<CalendarDay>) : 
 
   init {
     this.dates = HashSet(dates)
+  }
+}
+
+class TodayDecorator(private val color: Int) : DayViewDecorator {
+
+  override fun shouldDecorate(day: CalendarDay): Boolean {
+    return day == CalendarDay.today()
+  }
+
+  override fun decorate(view: DayViewFacade) {
+    view.addSpan(DonutSpan(color))
   }
 }
